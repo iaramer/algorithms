@@ -46,15 +46,3 @@ def test_chaotic_elements_with_repeats(func):
     nums = [6, 2, 1, 6, 7, 5, 1, 5, 6, 4, 1, 3]
     res = [1, 1, 1, 2, 3, 4, 5, 5, 6, 6, 6, 7]
     assert func(nums) == res
-
-
-def test_sorting_algorithm(func):
-    test_empty(func)
-    test_single_element(func)
-    test_equal_elements(func)
-    test_asc_elements_no_repeats(func)
-    test_asc_elements_with_repeats(func)
-    test_desc_elements_no_repeats(func)
-    test_desc_elements_with_repeats(func)
-    test_chaotic_elements_no_repeats(func)
-    test_chaotic_elements_with_repeats(func)

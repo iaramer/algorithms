@@ -53,3 +53,15 @@ def quick_sort(nums):
         else:
             right.append(num)
     return quick_sort(left) + quick_sort(right)
+
+
+def insertion_sort(nums):
+    if len(nums) < 2:
+        return nums
+    for i in range(1, len(nums)-1):
+        for j in range(i-1, 0):
+            if nums[i] < nums[j]:
+                nums[i], nums[j] = nums[j], nums[i]
+            else:
+                break
+    return nums

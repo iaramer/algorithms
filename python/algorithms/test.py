@@ -1,5 +1,5 @@
 from algorithms.general_test import *
-from algorithms.sorting import merge_sort, quick_sort, insertion_sort
+from algorithms.sorting import *
 
 
 def algorithm_test(func):
@@ -22,5 +22,9 @@ def test_quick_sort():
     algorithm_test(quick_sort)
 
 
-def test_insertion_sort():
-    algorithm_test(insertion_sort)
+def test_insertion_sort_1():
+    algorithm_test(insertion_sort_1)
+
+
+def test_insertion_sort_2():
+    algorithm_test(insertion_sort_2)

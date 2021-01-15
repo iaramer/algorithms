@@ -58,10 +58,10 @@ def quick_sort(nums):
 def insertion_sort(nums):
     if len(nums) < 2:
         return nums
-    for i in range(1, len(nums)-1):
-        for j in range(i-1, 0):
-            if nums[i] < nums[j]:
-                nums[i], nums[j] = nums[j], nums[i]
+    for i in range(1, len(nums)):
+        for j in reversed(range(0, i)):
+            if nums[j+1] < nums[j]:
+                nums[j+1], nums[j] = nums[j], nums[j+1]
             else:
                 break
     return nums

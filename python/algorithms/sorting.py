@@ -53,32 +53,3 @@ def quick_sort(nums):
         else:
             right.append(num)
     return quick_sort(left) + quick_sort(right)
-
-
-if __name__ == '__main__':
-    # todo: add tests
-    arr = [1, 8, 5, 8, 2, 97, 2, 54, 2, 6]
-    print(merge_sort(arr))
-
-    arr = [9, 2, 6]
-    print(merge_sort(arr))
-
-    arr = [1]
-    print(merge_sort(arr))
-
-    arr = []
-    print(merge_sort(arr))
-
-    print("Quick sort:")
-    # todo: add tests
-    arr = [1, 8, 5, 8, 2, 97, 2, 54, 2, 6]
-    print(quick_sort(arr))
-
-    arr = [9, 2, 6]
-    print(quick_sort(arr))
-
-    arr = [1]
-    print(quick_sort(arr))
-
-    arr = []
-    print(quick_sort(arr))

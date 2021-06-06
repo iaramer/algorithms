@@ -1,5 +1,5 @@
-from algorithms.general_test import *
-from algorithms.sorting import *
+from general_test import *
+from sorting import *
 
 
 def algorithm_test(func):

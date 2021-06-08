@@ -1,4 +1,4 @@
-from general_test import *
+from test_sorting import *
 from sorting import *
 
 

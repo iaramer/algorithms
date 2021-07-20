@@ -1,9 +1,10 @@
-import numpy as np
-
-
 def get_trace(mat):
-    mx = np.array(mat)
-    return np.trace(mx)
+    res = 0
+    for i in range(len(mat)):
+        for j in range(len(mat)):
+            if i==j:
+                res += mat[i][j]
+    return res
 
 
 # if __name__ == '__main__':

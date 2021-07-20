@@ -2,17 +2,22 @@ from collections import Counter
 
 
 def poly(s):
-    res = list()
-    d = dict(Counter(s).most_common())
-    l = lambda item: item[1]>1
-    dd = dict(filter(l, d.items()))
-    for c in sorted(dd, key=lambda it: it[0]):
-        res += [c] * (dd[c] // 2)
+    res = ''
+    dd = dict()
+    sin = ''
+    for k, v in Counter(s).most_common():
+        if v > 1:
+            dd[k] = v
+        elif v == 1 and (sin == '' or k < sin):
+                sin = k
 
-    d1 = dict(filter(lambda item: item[1]==1, d.items()))
-    sin = sorted(list(d1.keys()))[0]
-    res = res + [sin] + res[::-1]
-    return ''.join(res)
+    for c in sorted(dd.keys()):
+        res += c * (dd[c] // 2)
+        if dd[c] % 2 == 1 and (sin == '' or c < sin):
+            sin = c
+
+    res = res + sin + res[::-1]
+    return res
 
 
 # if __name__ == '__main__':
@@ -22,6 +27,8 @@ def poly(s):
 #
 #     sys.stdin = open('input002.txt', 'r')
 #     assert poly(input()) == 'iai'
+#
+#     assert poly('jijijijijijijijijijij') == 'iiiiijjjjjjjjjjjiiiii'
 #     print('GJ!')
 
 print(poly(input()))

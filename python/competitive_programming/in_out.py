@@ -2,6 +2,8 @@
 # Change input from standard input to file:
 import sys
 sys.stdin = open('in.txt', 'r')
+# Change output from standard output to file:
+sys.stdout = open('in.txt', 'w')
 
 # Read an integer from standard input:
 n = int(input())

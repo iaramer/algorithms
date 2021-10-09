@@ -3,7 +3,7 @@
 import sys
 sys.stdin = open('in.txt', 'r')
 # Change output from standard output to file:
-sys.stdout = open('in.txt', 'w')
+sys.stdout = open('out.txt', 'w')
 
 # Read an integer from standard input:
 n = int(input())

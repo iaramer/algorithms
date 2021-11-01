@@ -29,19 +29,11 @@ from time import time
 
 estimate_execution_time = True
 
-# Fixed parameters of quantum process:
 quantum_a = 7 ** 5
 quantum_m = 2 ** 31 - 1
 
 
 def analyze_trimpazation_original(n, m, q0):
-    '''
-    This function generates data with given parameters
-    and calculates desired Y value.
-    You need to modify it to make it execute faster.
-    You can check your progress using estimate_execution_time flag
-    at the top of the file.
-    '''
     m_div2 = m // 2
     q = q0
 
@@ -79,11 +71,11 @@ def analyze_trimpazation(n, m, q0):
     print(time() - time11)
 
     time12 = time()
-    minx = - min(x)
-    M = minx + max(x) + 1
+    minx = - m_div2
+    M = m
     a = [0] * M
     for v in x:
-        a[v + minx] += 1
+        a[v - minx] += 1
     print(time() - time12)
 
     time13 = time()
@@ -91,7 +83,7 @@ def analyze_trimpazation(n, m, q0):
     asum_prev = 1
     for i, x_i in enumerate(a):  # i - element, x_i - repetitions
         asum = (2 * asum_prev + x_i - 1) * x_i
-        res += (i - minx) * asum
+        res += (i + minx) * asum
         asum_prev += x_i
     print(time() - time13)
     return res // 2

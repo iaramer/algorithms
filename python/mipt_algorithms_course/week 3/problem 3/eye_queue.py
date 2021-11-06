@@ -55,93 +55,87 @@ def read_cli(file):
     return inputs, n_shops
 
 
-class AIDequeue:
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+        self.prev = None
 
-    def __init__(self, init_len=100):
-        self.length = 0
-        self.array = [None] * init_len
+
+class AIDeque:
+    def __init__(self):
         self.head = None
         self.tail = None
+        self.mid = None
+        self.size = 0
 
-    def __len__(self) -> int:
-        return self.length
+    def __len__(self):
+        return self.size
 
-    def len(self) -> int:
-        return self.length
-
-    def append(self, element) -> None:
-        if self.length == 0:
-            self.array[0] = element
-            self.head = self.tail = 0
+    def append(self, data):
+        temp = Node(data)
+        if self.head is None:
+            self.head = temp
+            self.tail = temp
+            self.mid = temp
         else:
-            if self.tail + 1 < len(self.array):  # don't need to do a circle
-                if self.tail + 1 == self.head:
-                    self.array = self.array[:self.head] \
-                        + [None] * len(self.array) \
-                        + self.array[self.head:]  # O(N)
-                    self.head += len(self.array) // 2
-                self.tail += 1
-            else:  # need to do a circle
-                if 0 == self.head:
-                    self.array = [None] * len(self.array) + self.array  # O(N)
-                    self.head += len(self.array) // 2
-                self.tail = 0
-        self.array[self.tail] = element
-        self.length += 1
-
-    def push_front(self, element) -> None:
-        if self.length == 0:
-            self.head = self.tail = 0
-        else:
-            if self.head - 1 >= 0:  # don't need to do a circle
-                if self.head - 1 == self.tail:
-                    self.array = self.array[:self.head] \
-                        + [None] * len(self.array) \
-                        + self.array[self.head:]  # O(N)
-                    self.head += len(self.array) // 2
-                self.head -= 1
-            else:  # need to do a circle
-                if len(self.array) - 1 == self.tail:
-                    self.array += [None] * len(self.array)  # O(N)
-                self.head = len(self.array) - 1
-        self.array[self.head] = element
-        self.length += 1
+            temp.next = self.tail
+            self.tail.prev = temp
+            self.tail = temp
+            if self.mid is None:
+                self.mid = self.head
+            if self.size % 2 == 0:
+                self.mid = self.mid.prev
+        self.size += 1
 
     def popleft(self):
-        if self.length == 0:
-            return None
-        el = self.array[self.head]
-        if self.head == len(self.array) - 1:
-            self.head = 0
+        if self.size == 0:
+            return
+        temp = self.head
+        if self.size == 1:
+            self.head = None
+            self.mid = None
+            self.tail = None
         else:
-            self.head += 1
-        self.length -= 1
-        return el
+            if self.size % 2 == 0:
+                if self.size == 3:
+                    self.mid.next = None
+                else:
+                    self.mid = self.mid.prev
+            self.head = self.head.prev
+            if self.head is not None:
+                self.head.next = None
 
-    def insert(self, idx, element) -> None:
-        if self.length == 0:
-            self.append(element)
-        elif idx == 0:
-            self.push_front(element)
-        elif self.length == 1:
-            self.append(element)
-        elif self.head < self.tail:
-            self.array.insert(self.head + idx, element)
-            self.tail += 1
-            self.length += 1
-        elif self.head > self.tail:
-            self.array = self.array[self.head:] + self.array[:self.tail + 1]
-            self.head = 0
-            self.tail = len(self.array)  # self.tail+=1 already included
-            self.array.insert(self.head + idx, element)
-            self.length += 1
+        self.size -= 1
+        return_val = temp.data
+        del temp
+        return return_val
+
+    def insert_mid(self, data):
+        temp = Node(data)
+        if self.head is None:
+            self.head = temp
+            self.mid = temp
+            self.tail = temp
+        elif self.size == 1:
+            self.tail = temp
+            # self.mid = self.head  # already
+            self.head.prev = temp
+            temp.next = self.head
+        else:
+            temp.prev = self.mid.prev
+            temp.next = self.mid
+            if self.mid.prev is not None:
+                self.mid.prev.next = temp
+            self.mid.prev = temp
+            if self.size % 2 == 0:
+                self.mid = temp
+        self.size += 1
 
 
 def func(events, n_shops):
     ans = list()
-    inl = 30000  # 30k is the best option for now, 51 gives ML
-    # inl = 1
-    shops = [AIDequeue(init_len=inl) for _ in range(n_shops)]
+    shops = [AIDeque() for _ in range(n_shops)]
     for event in events:
         ev = event[0]
         id_shop = event[1]
@@ -149,11 +143,7 @@ def func(events, n_shops):
         if ev == '+':
             shops[id_shop].append(id_p)
         elif ev == '!':
-            if len(shops[id_shop]) == 0:
-                shops[id_shop].append(id_p)
-            else:
-                new_idx = len(shops[id_shop]) // 2 + len(shops[id_shop]) % 2
-                shops[id_shop].insert(new_idx, id_p)  # O(N)
+            shops[id_shop].insert_mid(id_p)
         elif ev == '-':
             id_left = shops[id_shop].popleft()
             if id_left is not None:
@@ -209,6 +199,10 @@ if __name__ == '__main__':
 
     res = func(*read_cli('ex6.txt'))
     act = [1, 3]
+    assert res == act
+
+    res = func(*read_cli('ex7.txt'))
+    act = check(*read_cli('ex7.txt'))
     assert res == act
 
     print('OK')

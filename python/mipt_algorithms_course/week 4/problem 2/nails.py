@@ -19,7 +19,15 @@ one connection.
 
 
 def func(arr):
-    pass
+    arr = sorted(arr)
+    if len(arr) <= 3:
+        return arr[-1] - arr[0]
+    d = dict()
+    d[2] = arr[1] - arr[0]
+    d[3] = arr[2] - arr[0]
+    for i in range(4, len(arr) + 1):
+        d[i] = min(d[i - 1], d[i - 2]) + arr[i - 1] - arr[i - 2]
+    return d[len(arr)]
 
 
 if __name__ == '__main__':
@@ -38,3 +46,17 @@ if __name__ == '__main__':
     inp = [0, 2, 10, 1, 12]
     act = 4
     assert func(inp) == act
+
+    inp = [4, 10, 0, 12, 2]
+    act = 6
+    assert func(inp) == act
+
+    inp = [2, 2, 2, 2, 2]
+    act = 0
+    assert func(inp) == act
+
+    inp = [2, 2, 4, 5, 5]
+    act = 1
+    assert func(inp) == act
+
+    print('OK')

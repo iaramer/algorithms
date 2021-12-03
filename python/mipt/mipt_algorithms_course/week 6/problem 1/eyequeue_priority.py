@@ -30,36 +30,89 @@ For each event of type - print id of customer who enters the shop during this ev
 """
 
 
-def read_cli(file):  # TODO: rewrite
+import math
+
+
+def sift_up(data, i):
+    if i == 0:
+        return
+    parent = (i - 1) // 2
+    if data[parent] > data[i]:
+        data[parent], data[i] = data[i], data[parent]
+        sift_up(data, parent)
+
+
+def sift_down(data, i):
+    child1 = i * 2 + 1
+    child2 = i * 2 + 2
+    if child1 >= len(data):
+        return
+    if child2 >= len(data):
+        child_min = child1
+    else:
+        child_min = child1 if data[child1] < data[child2] else child2
+    if data[child_min] < data[i]:
+        data[i], data[child_min] = data[child_min], data[i]
+        sift_down(data, child_min)
+
+
+def heapify(data):
+    for i in range(len(data) - 1, -1, -1):
+        sift_down(data, i)
+
+
+def heappush(data, x):
+    data.append(x)
+    sift_up(data, len(data) - 1)
+
+
+def heappop(data, i=0):
+    data[i], data[-1] = data[-1], data[i]
+    res = data.pop()
+    sift_up(data, i)
+    sift_down(data, i)
+    return res
+
+
+def read_cli(file):
     inputs = list()
-    n_shops = None
     for line in open(file, 'r'):
         cmd = line.split()
         if len(cmd) == 1:
-            if cmd[0].isdigit():
-                n_shops = int(cmd[0])
-            else:
-                break
-        elif len(cmd) == 2:
-            inputs.append((cmd[0], int(cmd[1])))
-        elif len(cmd) == 3:
-            inputs.append((cmd[0], int(cmd[1]), int(cmd[2])))
-    return inputs, n_shops
+            inputs.append('-')
+        else:
+            priority = math.inf
+            if len(cmd) == 3 and cmd[2] != '0':
+                priority = 1 / int(cmd[2])
+            inputs.append((int(cmd[1]), priority))
+    return inputs[1:]
 
 
-def func():
-    pass
+def func(arr):
+    res = []
+    h = []
+    for el in arr:
+        if el == '-':
+            res.append(heappop(h)[1])
+        else:
+            heappush(h, (el[1], el[0]))
+    return res
 
 
 if __name__ == '__main__':
-    res = func(*read_cli('ex1.txt'))
+    # for n in func(read_cli('input.txt')):
+    #     print(n)
+
+    res = func(read_cli('ex1.txt'))
     act = [0, 2, 1]
     assert res == act
 
-    res = func(*read_cli('ex2.txt'))
+    res = func(read_cli('ex2.txt'))
     act = [0, 3, 4, 1, 2]
     assert res == act
 
-    res = func(*read_cli('ex3.txt'))
+    res = func(read_cli('ex3.txt'))
     act = [3, 4, 5, 0, 1, 2]
     assert res == act
+
+    print('OK!')

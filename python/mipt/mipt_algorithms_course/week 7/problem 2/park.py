@@ -31,6 +31,66 @@ Print one integer number — minimum number of steps you need to get from the cu
 impossible, print -1.
 """
 
+import sys
+
+
+def read_cli(file):
+    sys.stdin = open(file, 'r')
+    N, M = list(map(int, input().split()))
+    mp = list()
+    for _ in range(N):
+        mp.append(list(input()))
+    return mp
+
+
+def is_valid(map, x, y):
+    return 0 <= x < len(map) and 0 <= y < len(map[0])
+
+
+def func(mp):
+    x, y = 0, 0
+    for i in range(len(mp)):
+        for j in range(len(mp[i])):
+            if mp[i][j] == 'E':
+                x, y = i, j
+                break
+
+    mp[x][y] = '#'
+    step = 1
+    steps = [(x + 1, y), (x, y + 1), (x - 1, y), (x, y - 1)]
+    nxt_steps = []
+    while steps:
+        x1, y1 = steps.pop()
+        if not is_valid(mp, x1, y1) or mp[x1][y1] == '#':
+            if not steps and len(nxt_steps) > 0:
+                step += 1
+                steps = nxt_steps
+                nxt_steps = []
+            continue
+        if mp[x1][y1] == 'X':
+            return step
+        nxt_steps += [(x1 + 1, y1), (x1, y1 + 1), (x1 - 1, y1), (x1, y1 - 1)]
+        mp[x1][y1] = '#'
+        if not steps and len(nxt_steps) > 0:
+            step += 1
+            steps = nxt_steps
+            nxt_steps = []
+    return -1
+
 
 if __name__ == '__main__':
-    # smth
+    # print(func(read_cli('ex1.txt')))
+
+    act = 2
+    ans = func(read_cli('ex1.txt'))
+    assert (act == ans)
+
+    act = 7
+    ans = func(read_cli('ex2.txt'))
+    assert (act == ans)
+
+    act = -1
+    ans = func(read_cli('ex3.txt'))
+    assert (act == ans)
+
+    print('OK!')

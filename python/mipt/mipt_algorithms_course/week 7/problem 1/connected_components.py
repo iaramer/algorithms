@@ -25,3 +25,99 @@ Then, for each connected component print two lines:
 
 You are free to print components and vertices inside components in any order.
 """
+
+import sys
+
+
+def read_act(file):
+    with open(file) as f:
+        lines = f.read().splitlines()
+    return lines
+
+
+def read_cli(file):
+    sys.stdin = open(file, 'r')
+    N, M = map(int, input().split())
+    G = [[] for i in range(N)]
+
+    for i in range(M):
+        x, y = map(int, input().split())
+        G[x].append(y)
+        G[y].append(x)
+    return G
+
+
+# def dfs(G, visited, v):  # recursive
+#     if visited[v]:
+#         return {}
+#     visited[v] = True
+#     nodes = {v}
+#     if not G[v]:
+#         return nodes
+#     for node in G[v]:
+#         if not visited[node]:
+#             nodes = set.union(nodes, dfs(G, visited, node))
+#     return nodes
+
+
+def dfs(G, visited, v):  # non-recursive
+    if visited[v]:
+        return {}
+    visited[v] = True
+    nodes = {v}
+    if not G[v]:
+        return nodes
+    to_visit = G[v]
+    for node in to_visit:
+        if not visited[node]:
+            visited[node] = True
+            nodes.add(node)
+            if len(G[node]) > 0:
+                to_visit += G[node]
+    return nodes
+
+
+def func(G):
+    n_components = 0
+    components = list()
+
+    # calculating number of connected components:
+    visited = [False] * len(G)
+    for i in range(len(G)):
+        if not visited[i]:
+            n_components += 1
+            components.append(dfs(G, visited, i))
+
+    res = list()
+    res.append(str(n_components))
+    for c in components:
+        res.append(str(len(c)))
+        res.append(' '.join(list(map(str, c))))
+    return res
+
+
+if __name__ == '__main__':
+    # for s in func(read_cli('input.txt')):
+    #     print(s)
+
+    act = read_act('act1.txt')
+    res = func(read_cli('ex1.txt'))
+    assert res == act
+
+    act = read_act('act2.txt')
+    res = func(read_cli('ex2.txt'))
+    assert res == act
+
+    act = read_act('act3.txt')
+    res = func(read_cli('ex3.txt'))
+    assert res == act
+
+    act = read_act('act4.txt')
+    res = func(read_cli('ex4.txt'))
+    assert res == act
+
+    act = read_act('act5.txt')
+    res = func(read_cli('ex5.txt'))
+    assert res == act
+
+    print('OK')

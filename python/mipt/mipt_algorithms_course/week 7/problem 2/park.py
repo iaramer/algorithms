@@ -30,3 +30,7 @@ Output format
 Print one integer number — minimum number of steps you need to get from the current position to the exit. If it is
 impossible, print -1.
 """
+
+
+if __name__ == '__main__':
+    # smth

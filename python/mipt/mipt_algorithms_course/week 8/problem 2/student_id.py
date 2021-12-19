@@ -22,24 +22,59 @@ Print single integer number — minimum cost of the path  which contains not mor
 given conditions doesn't exist, print -1.
 """
 
+import math
+import sys
 
-def func():
-    pass
+inf = math.inf
+DEBUG = True
+
+
+def read_cli(file):
+    sys.stdin = open(file, 'r')
+    N, s, f, K = map(int, input().split())
+    E = []  # tuples (v, u, w)
+    for i in range(N):
+        row = list(map(int, input().split()))
+        for j in range(len(row)):
+            if row[j] != -1:
+                E.append((i, j, row[j]))
+    return N, s, f, K, E
+
+
+def func(N, s, f, K, E):
+    if s == f:
+        return 0
+    elif K == 0:
+        return -1
+    d = [[math.inf] * N for _ in range(N)]
+    for i in range(N):
+        d[i][s] = 0
+    for l in range(K):
+        for (v, u, w) in E:
+            if d[l - 1][u] > d[l - 1][v] + w:
+                d[l][u] = d[l - 1][v] + w
+    ans = d[K - 1][f]
+    return ans if ans != math.inf else -1
 
 
 if __name__ == '__main__':
-    res = func()
-    act = 30
-    assert res == act
+    if DEBUG:
+        res = func(*read_cli('ex1.txt'))
+        act = 30
+        assert res == act
 
-    res = func()
-    act = 200
-    assert res == act
+        res = func(*read_cli('ex2.txt'))
+        act = 200
+        assert res == act
 
-    res = func()
-    act = 1000
-    assert res == act
+        res = func(*read_cli('ex3.txt'))
+        act = 1000
+        assert res == act
 
-    res = func()
-    act = 4
-    assert res == act
+        res = func(*read_cli('ex4.txt'))
+        act = 4
+        assert res == act
+
+        print('OK!')
+    else:
+        print(func(*read_cli('input.txt')))

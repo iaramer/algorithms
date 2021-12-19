@@ -29,5 +29,17 @@ def func():
 
 if __name__ == '__main__':
     res = func()
-    act
+    act = 30
+    assert res == act
+
+    res = func()
+    act = 200
+    assert res == act
+
+    res = func()
+    act = 1000
+    assert res == act
+
+    res = func()
+    act = 4
     assert res == act

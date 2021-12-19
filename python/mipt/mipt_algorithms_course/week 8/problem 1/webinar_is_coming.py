@@ -18,7 +18,7 @@ Input format
 First line contains 2 integer numbers 2 ≤ N ≤ 100000, 1 ≤ M ≤ 200000 — number of cities (vertices) and roads (edges)
 in the country (graph).
 
-Second line contains two integer numbers: 0 ≤ s, h < N — number of the city you are in and number of your home city, .
+Second line contains two integer numbers: 0 ≤ s, h < N — number of the city you are in and number of your home city.
 
 Each of following M lines defines an edge  with weight wi and contains three integer numbers:
 ui, vi, wi: 0 ≤ ui, vi < N, 0 ≤ wi leq 10000.
@@ -32,24 +32,77 @@ If path exists, the third line should contain k integer numbers — vertices in 
 be visited (first one is s, last one is h).
 """
 
+import math
+import sys
+from heapq import heappush, heappop
 
-def func():
-    pass
+inf = math.inf
+DEBUG = True
+
+
+def read_cli(file):
+    sys.stdin = open(file, 'r')
+    N, M = map(int, input().split())
+    start, end = map(int, input().split())
+    G = [{} for i in range(N)]
+    for i in range(M):
+        u, v, weight = map(int, input().split())
+        G[u][v] = weight
+        G[v][u] = weight
+    return N, M, start, end, G
+
+
+def func(N, M, s, end, G):
+    h = []
+    d = [inf] * N
+    v = -1
+    shortest_nodes = [-1 for _ in range(N)]
+
+    ans = list()
+    S = {-1}
+    d[s] = 0
+    heappush(h, (d[s], s))
+    while h:
+        while v in S and h:
+            v = heappop(h)[1]
+        if v not in S:
+            S.add(v)
+            for u in G[v]:
+                new_d = d[v] + G[v][u]
+                if new_d < d[u]:
+                    heappush(h, (new_d, u))
+                    d[u] = new_d
+                    shortest_nodes[u] = v
+    if d[end] == inf:
+        return [-1]
+    ans.append(d[end])
+    nodes = []
+    while end != -1 and shortest_nodes:
+        nodes.append(end)
+        end = shortest_nodes[end]
+    ans.append(len(nodes))
+    ans.append(list(reversed(nodes)))
+    return ans
 
 
 if __name__ == '__main__':
-    res = func()
-    act = 30
-    assert res == act
+    if DEBUG:
+        res = func(*read_cli("ex1.txt"))
+        act = [4, 4, [0, 1, 3, 2]]
+        assert res == act
 
-    res = func()
-    act = 200
-    assert res == act
+        res = func(*read_cli("ex2.txt"))
+        act = [-1]
+        assert res == act
 
-    res = func()
-    act = 1000
-    assert res == act
+        res = func(*read_cli("ex3.txt"))
+        act = [13, 3, [0, 4, 2]]
+        assert res == act
 
-    res = func()
-    act = 4
-    assert res == act
+        print('OK!')
+    else:
+        res = func(*read_cli("input.txt"))
+        print(res[0])
+        if len(res) > 1:
+            print(res[1])
+            print(' '.join(str(n) for n in res[2]))

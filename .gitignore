@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 #PyCharm
-.idea/
+python/.idea/
 .vscode/
 
 # C extensions

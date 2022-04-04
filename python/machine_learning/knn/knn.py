@@ -80,7 +80,7 @@ class KNearestNeighbor:
                 #####################################################################
                 # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
                 # dists[i][j] = KNearestNeighbor.norm(X[i] - self.X_train[j])
-                dists[i][j] = np.dot(X[i] - self.X_train[j], X[i] - self.X_train[j])
+                dists[i, j] = np.sqrt(np.dot(X[i] - self.X_train[j], X[i] - self.X_train[j]))
                 # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
 
@@ -101,9 +101,8 @@ class KNearestNeighbor:
             # Do not use np.linalg.norm().                                        #
             #######################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-            # print(X[i].shape, self.X_train.shape, z.shape)
-            # (64,) (1697, 64) (1697, 64)
-            dists[i] = list(map(KNearestNeighbor.norm, X[i] - self.X_train))
+            square_value = np.square(X[i, :] - self.X_train)
+            dists[i, :] = np.sqrt(square_value.sum(axis=1))
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
 
@@ -160,8 +159,8 @@ class KNearestNeighbor:
             # Hint: Look up the function numpy.argsort.                             #
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-            closest_indexes = np.argsort(dists[i])[:k]
-            closest_y = self.y_train[closest_indexes]
+            closest_indices = np.argsort(dists[i])[:k]
+            closest_y = self.y_train[closest_indices]
             # print(closest_y)
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
@@ -173,8 +172,9 @@ class KNearestNeighbor:
             # label.                                                                #
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-            occurence_count = Counter(closest_y)
-            y_pred[i] = occurence_count.most_common(1)[0][0]
+            # occurence_count = Counter(closest_y)
+            # y_pred[i] = occurence_count.most_common(1)[0][0]
+            y_pred[i] = np.bincount(closest_y).argmax()
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
         return y_pred

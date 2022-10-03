@@ -36,3 +36,17 @@ def solution(N):
         else:
             cur += 1
     return max_gap
+
+
+# Starting code
+
+import numpy as np
+
+def mutual_information(arr):
+    arr = np.array(arr)
+    term1 = np.sum(arr * np.where(arr != 0, np.log(arr), 0))
+    pi = np.sum(arr, axis=1)
+    term2 = np.sum(pi * np.where(pi != 0, np.log(pi), 0))
+    pj = np.sum(arr, axis=0)
+    term3 = np.sum(pj * np.where(pj != 0, np.log(pj), 0))
+    return term1 - term2 - term3

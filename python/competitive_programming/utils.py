@@ -38,3 +38,7 @@ from itertools import permutations
 perm = list(permutations([1, 2, 3], 2))  # [(1, 2), (1, 3), (2, 1), (2, 3), (3, 1), (3, 2)]
 from itertools import combinations
 comb = list(combinations([1, 2, 3], 2))  # [(1, 2), (1, 3), (2, 3)]
+
+# Get the difference between 2 time steps in the same values, e.g. get the difference between 2 months
+current_month, past_month = 2, 10
+(current_month - past_month) % 12  # The answer is 4; doesn't work with the months of different years
